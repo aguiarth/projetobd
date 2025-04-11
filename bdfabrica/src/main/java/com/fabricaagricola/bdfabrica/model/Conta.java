@@ -1,9 +1,9 @@
 package com.fabricaagricola.bdfabrica.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-
 import com.fabricaagricola.bdfabrica.enums.StatusConta;
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -12,24 +12,24 @@ public abstract class Conta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdConta")
+    @Column(name = "id_conta")
     private int idConta;
 
     @ManyToOne
-    @JoinColumn(name = "IdFinanceiro") // nome exatamente como está no script SQL
+    @JoinColumn(name = "id_financeiro", nullable = false)
     private Financeiro financeiro;
 
-    @Column(name = "dataEmissao")
+    @Column(name = "data_emissao", nullable = false)
     private LocalDate dataEmissao;
 
-    @Column(name = "dataVencimento")
+    @Column(name = "data_vencimento", nullable = false)
     private LocalDate dataVencimento;
 
-    @Column(name = "valorTotal")
+    @Column(name = "valor_total", nullable = false)
     private float valorTotal;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false, length = 20)
     private StatusConta status;
 
     // Construtores
@@ -88,6 +88,6 @@ public abstract class Conta {
         this.status = status;
     }
 
-    // Método abstrato para subclasses implementarem
+    // Método abstrato
     public abstract void processarConta();
 }

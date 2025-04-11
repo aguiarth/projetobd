@@ -1,15 +1,15 @@
 package com.fabricaagricola.bdfabrica.model;
 
 import com.fabricaagricola.bdfabrica.enums.StatusConta;
-
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Pagar")
+@PrimaryKeyJoinColumn(name = "id_conta") // conecta a PK da superclasse "Conta"
 public class ContaPagar extends Conta {
 
     @ManyToOne
-    @JoinColumn(name = "cnpj", referencedColumnName = "cnpj")
+    @JoinColumn(name = "cnpj", referencedColumnName = "cnpj", nullable = false)
     private Fornecedor fornecedor;
 
     // Construtor padrão
@@ -37,7 +37,6 @@ public class ContaPagar extends Conta {
 
     @Override
     public void processarConta() {
-        // lógica de processamento específica para contas a pagar
         System.out.println("Processando conta a pagar: " + getIdConta());
     }
 }
