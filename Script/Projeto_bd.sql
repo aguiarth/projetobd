@@ -1,188 +1,187 @@
-create database bd_fabrica_descartaveis;
+CREATE DATABASE bd_fabrica_descartaveis;
 
-create table Financeiro(
-	IdFinanceiro int primary key,
-	historico_lucro float,
-	historico_pejuizo float,
-	dataAtualizacao DATE
+CREATE TABLE Financeiro (
+    id_financeiro INT PRIMARY KEY,
+    historico_lucro FLOAT,
+    historico_prejuizo FLOAT,
+    data_atualizacao DATE
 );
 
-create table Contas(
-	IdConta int primary key,
-	IdFinanceiro int,
-	dataEmissao date,
-	dataVencimento date,
-	valorTotal float,
-	status VARCHAR(45),
-	foreign key (IdFinanceiro) references Financeiro(IdFinanceiro)
+CREATE TABLE Conta (
+    id_conta INT PRIMARY KEY,
+    id_financeiro INT,
+    data_emissao DATE,
+    data_vencimento DATE,
+    valor_total FLOAT,
+    status VARCHAR(45),
+    FOREIGN KEY (id_financeiro) REFERENCES Financeiro(id_financeiro)
 );
 
-create table Receber(
-	IdConta int,
-	foreign key (IdConta) references Contas(IdConta),
-	primary key (IdConta)
+CREATE TABLE ContaReceber (
+    id_conta INT PRIMARY KEY,
+    FOREIGN KEY (id_conta) REFERENCES Conta(id_conta)
 );
 
-create table Cliente(
-	cnpj VARCHAR(45) primary key,
-	razaoSocial VARCHAR(45),
-	rua VARCHAR(45),
-	numero VARCHAR(45),
-	cidade VARCHAR(45),
-	cep VARCHAR(45),
-	telefonePessoal VARCHAR(45),
-	telefoneResidencial VARCHAR(45),
-	email VARCHAR(45)
+CREATE TABLE Cliente (
+    cnpj VARCHAR(45) PRIMARY KEY,
+    razao_social VARCHAR(45),
+    rua VARCHAR(45),
+    numero VARCHAR(45),
+    cidade VARCHAR(45),
+    cep VARCHAR(45),
+    telefone_pessoal VARCHAR(45),
+    telefone_residencial VARCHAR(45),
+    email VARCHAR(45)
 );
 
-create table Possui(
-	cnpj VARCHAR(45),
-	IdConta int,
-	foreign key (cnpj) references Cliente(cnpj),
-	foreign key (IdConta) references Receber(IdConta),
-	primary key (cnpj, IdConta)
+CREATE TABLE Possui (
+    cnpj VARCHAR(45),
+    id_conta INT,
+    FOREIGN KEY (cnpj) REFERENCES Cliente(cnpj),
+    FOREIGN KEY (id_conta) REFERENCES ContaReceber(id_conta),
+    PRIMARY KEY (cnpj, id_conta)
 );
 
-create table NotaFiscal(
-	chave VARCHAR(45) primary key,
-	valorImposto float,
-	dataEmissaoNota date
+CREATE TABLE NotaFiscal (
+    chave VARCHAR(45) PRIMARY KEY,
+    valor_imposto FLOAT,
+    data_emissao_nota DATE
 );
 
-create table Pedido(
-	numero VARCHAR(45) primary key,
-	chave VARCHAR(45),
-	dataEmissao date,
-	valorTotal float,
-	status VARCHAR(45),
-	formaPagamento VARCHAR(45),
-	foreign key (chave) references NotaFiscal(chave)
+CREATE TABLE Pedido (
+    numero VARCHAR(45) PRIMARY KEY,
+    chave VARCHAR(45),
+    data_emissao DATE,
+    valor_total FLOAT,
+    status VARCHAR(45),
+    forma_pagamento VARCHAR(45),
+    FOREIGN KEY (chave) REFERENCES NotaFiscal(chave)
 );
 
-create table Realiza(
-	cnpj VARCHAR(45),
-	numero VARCHAR(45),
-	foreign key (cnpj) references Cliente(cnpj),
-	foreign key (numero) references Pedido(numero),
-	primary key (cnpj, numero)
+CREATE TABLE Realiza (
+    cnpj VARCHAR(45),
+    numero VARCHAR(45),
+    FOREIGN KEY (cnpj) REFERENCES Cliente(cnpj),
+    FOREIGN KEY (numero) REFERENCES Pedido(numero),
+    PRIMARY KEY (cnpj, numero)
 );
 
-create table Expedicao(
-	IdExpedicao int primary key,
-	dataExpedicao date,
-	horaExpedicao time,
-	status VARCHAR(45)
+CREATE TABLE Expedicao (
+    id_expedicao INT PRIMARY KEY,
+    data_expedicao DATE,
+    hora_expedicao TIME,
+    status VARCHAR(45)
 );
 
-create table Envia(
-	numero VARCHAR(45),
-	IdExpedicao int,
-	foreign key (numero) references Pedido(numero),
-	foreign key (IdExpedicao) references Expedicao(IdExpedicao),
-	primary key (numero, IdExpedicao)
+CREATE TABLE Envia (
+    numero VARCHAR(45),
+    id_expedicao INT,
+    FOREIGN KEY (numero) REFERENCES Pedido(numero),
+    FOREIGN KEY (id_expedicao) REFERENCES Expedicao(id_expedicao),
+    PRIMARY KEY (numero, id_expedicao)
 );
 
-create table EntregaTransporte(
-	numero_entrega VARCHAR(45) primary key,
-	IdExpedicao int,
-	dataPrevista date,
-	dataSaida date,
-	dataEntrega date,
-	foreign key (IdExpedicao) references Expedicao(IdExpedicao)
+CREATE TABLE EntregaTransporte (
+    numero_entrega VARCHAR(45) PRIMARY KEY,
+    id_expedicao INT,
+    data_prevista DATE,
+    data_saida DATE,
+    data_entrega DATE,
+    FOREIGN KEY (id_expedicao) REFERENCES Expedicao(id_expedicao)
 );
 
-create table ProdutoAcabado(
-	IdProduto int primary key,
-	descricao VARCHAR(45),
-	dataFinalizacao date
+CREATE TABLE ProdutoAcabado (
+    id_produto INT PRIMARY KEY,
+    descricao VARCHAR(45),
+    data_finalizacao DATE
 );
 
-create table Contem(
-	numero VARCHAR(45),
-	IdProduto int,
-	foreign key (numero) references Pedido(numero),
-	foreign key (IdProduto) references ProdutoAcabado(IdProduto),
-	primary key (numero, IdProduto)
+CREATE TABLE Contem (
+    numero VARCHAR(45),
+    id_produto INT,
+    FOREIGN KEY (numero) REFERENCES Pedido(numero),
+    FOREIGN KEY (id_produto) REFERENCES ProdutoAcabado(id_produto),
+    PRIMARY KEY (numero, id_produto)
 );
 
-create table OrdemProducao(
-	IdOrdem int primary key,
-	IdDependente int,
-	IdRequisitado int,
-	produtoFabricado VARCHAR(45),
-	quantidadeProduto int,
-	dataInicio date,
-	dataFinal date,
-	descricao VARCHAR(45),
-	foreign key (IdDependente) references OrdemProducao(IdOrdem),
-	foreign key (IdRequisitado) references OrdemProducao(IdOrdem)
+CREATE TABLE OrdemProducao (
+    id_ordem INT PRIMARY KEY,
+    id_dependente INT,
+    id_requisitado INT,
+    produto_fabricado VARCHAR(45),
+    quantidade_produto INT,
+    data_inicio DATE,
+    data_final DATE,
+    descricao VARCHAR(45),
+    FOREIGN KEY (id_dependente) REFERENCES OrdemProducao(id_ordem),
+    FOREIGN KEY (id_requisitado) REFERENCES OrdemProducao(id_ordem)
 );
 
-create table Gera(
-	IdOrdem int,
-	IdProduto int,
-	foreign key (IdOrdem) references OrdemProducao(IdOrdem),
-	foreign key (IdProduto) references ProdutoAcabado(IdProduto),
-	primary key (IdOrdem, IdProduto)
+CREATE TABLE Gera (
+    id_ordem INT,
+    id_produto INT,
+    FOREIGN KEY (id_ordem) REFERENCES OrdemProducao(id_ordem),
+    FOREIGN KEY (id_produto) REFERENCES ProdutoAcabado(id_produto),
+    PRIMARY KEY (id_ordem, id_produto)
 );
 
-create table MateriaPrima(
-	IdMateriaPrima int primary key,
-	descricao VARCHAR(45),
-	dataValidade date,
-	custoUnitario float,
-	custoTotal float
+CREATE TABLE MateriaPrima (
+    id_materia_prima INT PRIMARY KEY,
+    descricao VARCHAR(45),
+    data_validade DATE,
+    custo_unitario FLOAT,
+    custo_total FLOAT
 );
 
-create table Consome(
-	IdMateriaPrima int,
-	IdOrdem int,
-	foreign key (IdMateriaPrima) references MateriaPrima(IdMateriaPrima),
-	foreign key (IdOrdem) references OrdemProducao(IdOrdem),
-	primary key (IdMateriaPrima, IdOrdem)
+CREATE TABLE Consome (
+    id_materia_prima INT,
+    id_ordem INT,
+    FOREIGN KEY (id_materia_prima) REFERENCES MateriaPrima(id_materia_prima),
+    FOREIGN KEY (id_ordem) REFERENCES OrdemProducao(id_ordem),
+    PRIMARY KEY (id_materia_prima, id_ordem)
 );
 
-create table Estoque(
-	IdEstoque int primary key,
-	tipoMovimentacao VARCHAR(45),
-	dataMovimentacao date,
-	horaMovimentacao time
+CREATE TABLE Estoque (
+    id_estoque INT PRIMARY KEY,
+    tipo_movimentacao VARCHAR(45),
+    data_movimentacao DATE,
+    hora_movimentacao TIME
 );
 
-create table Lote(
-	codigo VARCHAR(45) primary key,
-	IdEstoque int,
-	IdMateriaPrima int,
-	IdProduto int,
-	custo VARCHAR(45),
-	descricao VARCHAR(45),
-	quantidade int,
-	dataValidade date,
-	foreign key (IdEstoque) references Estoque(IdEstoque),
-	foreign key (IdMateriaPrima) references MateriaPrima(IdMateriaPrima),
-	foreign key (IdProduto) references ProdutoAcabado(IdProduto)
+CREATE TABLE Lote (
+    codigo VARCHAR(45) PRIMARY KEY,
+    id_estoque INT,
+    id_materia_prima INT,
+    id_produto INT,
+    custo VARCHAR(45),
+    descricao VARCHAR(45),
+    quantidade INT,
+    data_validade DATE,
+    FOREIGN KEY (id_estoque) REFERENCES Estoque(id_estoque),
+    FOREIGN KEY (id_materia_prima) REFERENCES MateriaPrima(id_materia_prima),
+    FOREIGN KEY (id_produto) REFERENCES ProdutoAcabado(id_produto)
 );
 
-create table Fornecedor(
-	cnpj VARCHAR(45) primary key,
-	razaoSocial VARCHAR(45),
-	endereco VARCHAR(45),
-	telefone VARCHAR(45),
-	condicoesPagamento VARCHAR(45)
+CREATE TABLE Fornecedor (
+    cnpj VARCHAR(45) PRIMARY KEY,
+    razao_social VARCHAR(45),
+    endereco VARCHAR(45),
+    telefone VARCHAR(45),
+    condicoes_pagamento VARCHAR(45)
 );
 
-create table Vincula(
-	cnpj VARCHAR(45),
-	codigo VARCHAR(45),
-	foreign key (cnpj) references Fornecedor(cnpj),
-	foreign key (codigo) references Lote(codigo),
-	primary key (cnpj, codigo)
+CREATE TABLE Vincula (
+    cnpj VARCHAR(45),
+    codigo VARCHAR(45),
+    FOREIGN KEY (cnpj) REFERENCES Fornecedor(cnpj),
+    FOREIGN KEY (codigo) REFERENCES Lote(codigo),
+    PRIMARY KEY (cnpj, codigo)
 );
 
-create table Pagar(
-	IdConta int,
-	cnpj VARCHAR(45),
-	foreign key (IdConta) references Contas(IdConta),
-	foreign key (cnpj) references Fornecedor(cnpj),
-	primary key (IdConta, cnpj)
+CREATE TABLE ContaPagar (
+    id_conta INT,
+    cnpj VARCHAR(45),
+    FOREIGN KEY (id_conta) REFERENCES Conta(id_conta),
+    FOREIGN KEY (cnpj) REFERENCES Fornecedor(cnpj),
+    PRIMARY KEY (id_conta, cnpj)
 );
