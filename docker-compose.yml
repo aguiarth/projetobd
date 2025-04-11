@@ -5,7 +5,7 @@ services:
     image: mysql:8.0
     container_name: mysql-spring
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: Matheus37420!
       MYSQL_DATABASE: bdfabrica
     ports:
       - "3306:3306"
