@@ -1,4 +1,4 @@
-package com.fabricaagricola.bdfabrica.model;
+package com.fabricaagricola.bdfabrica.enums;
 
 public enum StatusConta {
     PAGO,

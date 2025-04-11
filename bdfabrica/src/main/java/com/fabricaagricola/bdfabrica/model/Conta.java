@@ -3,14 +3,21 @@ package com.fabricaagricola.bdfabrica.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fabricaagricola.bdfabrica.enums.StatusConta;
+
 @Entity
-@Table(name = "Contas")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Contas")
 public abstract class Conta {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IdConta")
     private int idConta;
+
+    @ManyToOne
+    @JoinColumn(name = "IdFinanceiro")
+    private Financeiro financeiro;
 
     @Column(name = "dataEmissao")
     private LocalDate dataEmissao;
@@ -25,26 +32,44 @@ public abstract class Conta {
     @Column(name = "status")
     private StatusConta status;
 
+    // Construtores
     public Conta() {}
 
-    public Conta(int idConta, LocalDate dataEmissao, LocalDate dataVencimento, float valorTotal, StatusConta status) {
-        this.idConta = idConta;
+    public Conta(Financeiro financeiro, LocalDate dataEmissao, LocalDate dataVencimento, float valorTotal, StatusConta status) {
+        this.financeiro = financeiro;
         this.dataEmissao = dataEmissao;
         this.dataVencimento = dataVencimento;
         this.valorTotal = valorTotal;
         this.status = status;
     }
 
+    // Getters
     public int getIdConta() {
         return idConta;
+    }
+
+    public Financeiro getFinanceiro() {
+        return financeiro;
+    }
+
+    public void setFinanceiro(Financeiro financeiro) {
+        this.financeiro = financeiro;
     }
 
     public LocalDate getDataEmissao() {
         return dataEmissao;
     }
 
+    public void setDataEmissao(LocalDate dataEmissao) {
+        this.dataEmissao = dataEmissao;
+    }
+
     public LocalDate getDataVencimento() {
         return dataVencimento;
+    }
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
     }
 
     public float getValorTotal() {
@@ -63,5 +88,6 @@ public abstract class Conta {
         this.status = status;
     }
 
+    // Método abstrato para subclasses implementarem
     public abstract void processarConta();
 }

@@ -1,40 +1,28 @@
 package com.fabricaagricola.bdfabrica.model;
 
-import java.time.LocalDate;
+import com.fabricaagricola.bdfabrica.enums.StatusConta;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Receber")
 public class ContaReceber extends Conta {
 
-    @ManyToOne
-    @JoinTable(
-        name = "Possui",
-        joinColumns = @JoinColumn(name = "IdConta"),
-        inverseJoinColumns = @JoinColumn(name = "cnpj")
-    )
-    private Cliente cliente;
-
+    // Construtor padrão
     public ContaReceber() {}
 
-    public ContaReceber(int idConta, LocalDate dataEmissao, LocalDate dataVencimento,
-                        float valorTotal, StatusConta status, Cliente cliente) {
-        super(idConta, dataEmissao, dataVencimento, valorTotal, status);
-        this.cliente = cliente;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    // Construtor completo (repassa os dados para a superclasse Conta)
+    public ContaReceber(Financeiro financeiro, 
+                        java.time.LocalDate dataEmissao, 
+                        java.time.LocalDate dataVencimento, 
+                        float valorTotal, 
+                        StatusConta status) {
+        super(financeiro, dataEmissao, dataVencimento, valorTotal, status);
     }
 
     @Override
     public void processarConta() {
-        if (getStatus() == StatusConta.PENDENTE) {
-            setStatus(StatusConta.PAGO);
-        }
+        // lógica de processamento específica para contas a receber
+        System.out.println("Processando conta a receber: " + getIdConta());
     }
 }

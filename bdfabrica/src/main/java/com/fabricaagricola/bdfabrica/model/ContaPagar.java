@@ -1,6 +1,7 @@
 package com.fabricaagricola.bdfabrica.model;
 
-import java.time.LocalDate;
+import com.fabricaagricola.bdfabrica.enums.StatusConta;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,17 +9,24 @@ import jakarta.persistence.*;
 public class ContaPagar extends Conta {
 
     @ManyToOne
-    @JoinColumn(name = "cnpj")
+    @JoinColumn(name = "cnpj", referencedColumnName = "cnpj")
     private Fornecedor fornecedor;
 
+    // Construtor padrão
     public ContaPagar() {}
 
-    public ContaPagar(int idConta, LocalDate dataEmissao, LocalDate dataVencimento,
-                      float valorTotal, StatusConta status, Fornecedor fornecedor) {
-        super(idConta, dataEmissao, dataVencimento, valorTotal, status);
+    // Construtor completo
+    public ContaPagar(Financeiro financeiro,
+                      java.time.LocalDate dataEmissao,
+                      java.time.LocalDate dataVencimento,
+                      float valorTotal,
+                      StatusConta status,
+                      Fornecedor fornecedor) {
+        super(financeiro, dataEmissao, dataVencimento, valorTotal, status);
         this.fornecedor = fornecedor;
     }
 
+    // Getter e Setter
     public Fornecedor getFornecedor() {
         return fornecedor;
     }
@@ -29,8 +37,7 @@ public class ContaPagar extends Conta {
 
     @Override
     public void processarConta() {
-        if (getStatus() == StatusConta.PENDENTE) {
-            setStatus(StatusConta.PAGO);
-        }
+        // lógica de processamento específica para contas a pagar
+        System.out.println("Processando conta a pagar: " + getIdConta());
     }
 }
