@@ -1,14 +1,14 @@
 CREATE DATABASE bd_fabrica_descartaveis;
 
 CREATE TABLE Financeiro (
-    id_financeiro INT PRIMARY KEY,
+    id_financeiro INT AUTO_INCREMENT PRIMARY KEY,
     historico_lucro FLOAT,
     historico_prejuizo FLOAT,
     data_atualizacao DATE
 );
 
 CREATE TABLE Conta (
-    id_conta INT PRIMARY KEY,
+    id_conta INT AUTO_INCREMENT PRIMARY KEY,
     id_financeiro INT,
     data_emissao DATE,
     data_vencimento DATE,
@@ -18,7 +18,7 @@ CREATE TABLE Conta (
 );
 
 CREATE TABLE ContaReceber (
-    id_conta INT PRIMARY KEY,
+    id_conta INT AUTO_INCREMENT PRIMARY KEY,
     FOREIGN KEY (id_conta) REFERENCES Conta(id_conta)
 );
 
@@ -67,7 +67,7 @@ CREATE TABLE Realiza (
 );
 
 CREATE TABLE Expedicao (
-    id_expedicao INT PRIMARY KEY,
+    id_expedicao INT AUTO_INCREMENT PRIMARY KEY,
     data_expedicao DATE,
     hora_expedicao TIME,
     status VARCHAR(45)
@@ -91,7 +91,7 @@ CREATE TABLE EntregaTransporte (
 );
 
 CREATE TABLE ProdutoAcabado (
-    id_produto INT PRIMARY KEY,
+    id_produto INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(45),
     data_finalizacao DATE
 );
@@ -105,7 +105,7 @@ CREATE TABLE Contem (
 );
 
 CREATE TABLE OrdemProducao (
-    id_ordem INT PRIMARY KEY,
+    id_ordem INT AUTO_INCREMENT PRIMARY KEY,
     id_dependente INT,
     id_requisitado INT,
     produto_fabricado VARCHAR(45),
@@ -126,7 +126,7 @@ CREATE TABLE Gera (
 );
 
 CREATE TABLE MateriaPrima (
-    id_materia_prima INT PRIMARY KEY,
+    id_materia_prima INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(45),
     data_validade DATE,
     custo_unitario FLOAT,
@@ -142,7 +142,7 @@ CREATE TABLE Consome (
 );
 
 CREATE TABLE Estoque (
-    id_estoque INT PRIMARY KEY,
+    id_estoque INT AUTO_INCREMENT PRIMARY KEY,
     tipo_movimentacao VARCHAR(45),
     data_movimentacao DATE,
     hora_movimentacao TIME
