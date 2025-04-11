@@ -16,7 +16,7 @@ public abstract class Conta {
     private int idConta;
 
     @ManyToOne
-    @JoinColumn(name = "IdFinanceiro")
+    @JoinColumn(name = "IdFinanceiro") // nome exatamente como está no script SQL
     private Financeiro financeiro;
 
     @Column(name = "dataEmissao")
@@ -43,7 +43,7 @@ public abstract class Conta {
         this.status = status;
     }
 
-    // Getters
+    // Getters e Setters
     public int getIdConta() {
         return idConta;
     }
