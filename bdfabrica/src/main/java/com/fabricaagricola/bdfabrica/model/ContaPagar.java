@@ -37,6 +37,12 @@ public class ContaPagar extends Conta {
 
     @Override
     public void processarConta() {
-        System.out.println("Processando conta a pagar: " + getIdConta());
+        if (getStatus() == StatusConta.PAGO) {
+            Financeiro fin = getFinanceiro();
+            float novoPrejuizo = fin.getHistoricoPrejuizo() + getValorTotal();
+            fin.setHistoricoPrejuizo(novoPrejuizo);
+            fin.setDataAtualizacao(java.time.LocalDate.now());
+        }
     }
+
 }

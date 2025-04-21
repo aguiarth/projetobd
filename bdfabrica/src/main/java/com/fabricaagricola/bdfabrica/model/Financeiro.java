@@ -3,6 +3,7 @@ package com.fabricaagricola.bdfabrica.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+
 @Entity
 @Table(name = "Financeiro")
 public class Financeiro {
@@ -20,6 +21,7 @@ public class Financeiro {
 
     @Column(name = "data_atualizacao", nullable = false)
     private LocalDate dataAtualizacao;
+    
 
     // Construtor padrão
     public Financeiro() {}
@@ -29,6 +31,16 @@ public class Financeiro {
         this.historicoLucro = historicoLucro;
         this.historicoPrejuizo = historicoPrejuizo;
         this.dataAtualizacao = dataAtualizacao;
+    }
+    
+    @PrePersist
+    public void aoCriar() {
+        dataAtualizacao = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void aoAtualizar() {
+        dataAtualizacao = LocalDate.now();
     }
 
     // Getters e Setters
@@ -59,4 +71,5 @@ public class Financeiro {
     public void setDataAtualizacao(LocalDate dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
+    
 }

@@ -22,7 +22,11 @@ public class ContaReceber extends Conta {
 
     @Override
     public void processarConta() {
-        // lógica de processamento específica para contas a receber
-        System.out.println("Processando conta a receber: " + getIdConta());
+        if (getStatus() == StatusConta.PAGO) {
+            Financeiro fin = getFinanceiro();
+            float novoLucro = fin.getHistoricoLucro() + getValorTotal();
+            fin.setHistoricoLucro(novoLucro);
+            fin.setDataAtualizacao(java.time.LocalDate.now());
+        }
     }
 }
