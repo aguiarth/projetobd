@@ -36,7 +36,7 @@ create TABLE  Telefone_cliente (
 	cnpj VARCHAR(45),
 	telefone_cliente VARCHAR(45),
 	FOREIGN KEY (cnpj) REFERENCES Cliente(cnpj),
-	primary key (cnpj)
+	primary key (cnpj, telefone_cliente)
 );
 
 CREATE TABLE Possui (
