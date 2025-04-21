@@ -1,5 +1,10 @@
 package com.fabricaagricola.bdfabrica.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,11 +30,10 @@ public class Cliente {
     @Column(name = "cep", length = 45)
     private String cep;
 
-    @Column(name = "telefone_pessoal", length = 45)
-    private String telefonePessoal;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<TelefoneCliente> telefones = new ArrayList<>();
 
-    @Column(name = "telefone_residencial", length = 45)
-    private String telefoneResidencial;
 
     @Column(name = "email", length = 45)
     private String email;
@@ -39,16 +43,14 @@ public class Cliente {
 
     // Construtor completo
     public Cliente(String cnpj, String razaoSocial, String rua, String numero,
-                   String cidade, String cep, String telefonePessoal,
-                   String telefoneResidencial, String email) {
+                   String cidade, String cep, List<TelefoneCliente> telefones, String email) {
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.rua = rua;
         this.numero = numero;
         this.cidade = cidade;
         this.cep = cep;
-        this.telefonePessoal = telefonePessoal;
-        this.telefoneResidencial = telefoneResidencial;
+        this.telefones = telefones;
         this.email = email;
     }
 
@@ -102,20 +104,17 @@ public class Cliente {
         this.cep = cep;
     }
 
-    public String getTelefonePessoal() {
-        return telefonePessoal;
+    public List<TelefoneCliente> getTelefones() {
+        return telefones;
     }
 
-    public void setTelefonePessoal(String telefonePessoal) {
-        this.telefonePessoal = telefonePessoal;
-    }
-
-    public String getTelefoneResidencial() {
-        return telefoneResidencial;
-    }
-
-    public void setTelefoneResidencial(String telefoneResidencial) {
-        this.telefoneResidencial = telefoneResidencial;
+    public void setTelefones(List<TelefoneCliente> telefones) {
+        this.telefones = telefones;
+        if (telefones != null) {
+            for (TelefoneCliente tel : telefones) {
+                tel.setCliente(this); // mantém o vínculo reverso
+            }
+        }
     }
 
     public String getEmail() {
@@ -125,4 +124,19 @@ public class Cliente {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public void addTelefone(TelefoneCliente telefone) {
+        if (telefone != null) {
+            this.telefones.add(telefone);
+            telefone.setCliente(this);  // Vincula o telefone ao cliente
+        }
+    }
+
+    public void removeTelefone(TelefoneCliente telefone) {
+        if (telefone != null) {
+            this.telefones.remove(telefone);
+            telefone.setCliente(null);  // Desvincula o telefone do cliente
+        }
+    }
+
 }

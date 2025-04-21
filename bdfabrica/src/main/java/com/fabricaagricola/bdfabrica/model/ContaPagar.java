@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "Pagar")
 @PrimaryKeyJoinColumn(name = "id_conta") // conecta a PK da superclasse "Conta"
 public class ContaPagar extends Conta {
-
+	
     @ManyToOne
     @JoinColumn(name = "cnpj", referencedColumnName = "cnpj", nullable = false)
     private Fornecedor fornecedor;

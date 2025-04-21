@@ -1,6 +1,7 @@
 package com.fabricaagricola.bdfabrica.controller;
 
 import com.fabricaagricola.bdfabrica.model.Cliente;
+import com.fabricaagricola.bdfabrica.model.TelefoneCliente;
 import com.fabricaagricola.bdfabrica.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,15 @@ public class ClienteController {
 
     @PostMapping
     public Cliente criar(@RequestBody Cliente cliente) {
+        // Garante o vínculo reverso (cliente -> telefone -> cliente)
+        if (cliente.getTelefones() != null) {
+            for (TelefoneCliente telefone : cliente.getTelefones()) {
+                telefone.setCliente(cliente);
+            }
+        }
         return repository.save(cliente);
     }
+
 
     @GetMapping
     public List<Cliente> listarTodos() {
@@ -40,12 +48,24 @@ public class ClienteController {
             cliente.setNumero(novoCliente.getNumero());
             cliente.setCidade(novoCliente.getCidade());
             cliente.setCep(novoCliente.getCep());
-            cliente.setTelefonePessoal(novoCliente.getTelefonePessoal());
-            cliente.setTelefoneResidencial(novoCliente.getTelefoneResidencial());
             cliente.setEmail(novoCliente.getEmail());
+
+            // Limpa todos os telefones antigos
+            cliente.getTelefones().clear();
+
+            // Adiciona os novos telefones com vínculo reverso
+            if (novoCliente.getTelefones() != null) {
+                for (TelefoneCliente telefone : novoCliente.getTelefones()) {
+                    telefone.setCliente(cliente);
+                    cliente.addTelefone(telefone);
+                }
+            }
+
             return ResponseEntity.ok(repository.save(cliente));
         }).orElse(ResponseEntity.notFound().build());
     }
+
+
 
     @DeleteMapping("/{cnpj}")
     public ResponseEntity<Void> deletar(@PathVariable String cnpj) {
