@@ -15,7 +15,7 @@ public abstract class Conta {
     @Column(name = "id_conta")
     private int idConta;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_financeiro", nullable = false)
     private Financeiro financeiro;
 

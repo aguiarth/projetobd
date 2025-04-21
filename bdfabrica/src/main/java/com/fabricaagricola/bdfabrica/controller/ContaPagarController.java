@@ -2,6 +2,8 @@ package com.fabricaagricola.bdfabrica.controller;
 
 import com.fabricaagricola.bdfabrica.model.ContaPagar;
 import com.fabricaagricola.bdfabrica.repository.ContaPagarRepository;
+import com.fabricaagricola.bdfabrica.repository.FinanceiroRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,9 @@ public class ContaPagarController {
 
     @Autowired
     private ContaPagarRepository repository;
+    
+    @Autowired
+    private FinanceiroRepository financeiroRepository;
 
     @PostMapping
     public ContaPagar criar(@RequestBody ContaPagar conta) {
@@ -39,8 +44,10 @@ public class ContaPagarController {
             conta.setDataVencimento(novaConta.getDataVencimento());
             conta.setValorTotal(novaConta.getValorTotal());
             conta.setStatus(novaConta.getStatus());
-            conta.setFinanceiro(novaConta.getFinanceiro());
+            //conta.setFinanceiro(novaConta.getFinanceiro());
             conta.setFornecedor(novaConta.getFornecedor());
+            conta.processarConta();
+            financeiroRepository.save(conta.getFinanceiro());
             return ResponseEntity.ok(repository.save(conta));
         }).orElse(ResponseEntity.notFound().build());
     }

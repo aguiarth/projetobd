@@ -39,8 +39,8 @@ public class FinanceiroController {
     @PutMapping("/{id}")
     public ResponseEntity<Financeiro> updateFinanceiro(@PathVariable int id, @RequestBody Financeiro atualizado) {
         return financeiroRepository.findById(id).map(financeiro -> {
-            financeiro.setHistoricoLucro(atualizado.getHistoricoLucro());
-            financeiro.setHistoricoPrejuizo(atualizado.getHistoricoPrejuizo());
+        	 financeiro.setHistoricoLucro(atualizado.getHistoricoLucro());
+             financeiro.setHistoricoPrejuizo(atualizado.getHistoricoPrejuizo());
             financeiro.setDataAtualizacao(atualizado.getDataAtualizacao());
             return ResponseEntity.ok(financeiroRepository.save(financeiro));
         }).orElse(ResponseEntity.notFound().build());
