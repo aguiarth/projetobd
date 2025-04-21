@@ -29,9 +29,14 @@ CREATE TABLE Cliente (
     numero VARCHAR(45),
     cidade VARCHAR(45),
     cep VARCHAR(45),
-    telefone_pessoal VARCHAR(45),
-    telefone_residencial VARCHAR(45),
     email VARCHAR(45)
+);
+
+create TABLE  Telefone_cliente (
+	cnpj VARCHAR(45),
+	telefone_cliente VARCHAR(45),
+	FOREIGN KEY (cnpj) REFERENCES Cliente(cnpj),
+	primary key (cnpj)
 );
 
 CREATE TABLE Possui (
