@@ -1,21 +1,25 @@
 version: '3.8'
 
 services:
-  mysql:
+  db:
     image: mysql:8.0
-    container_name: mysql-spring
+    container_name: bd_project_4p
     environment:
-      MYSQL_ROOT_PASSWORD: Matheus37420!
-      MYSQL_DATABASE: bdfabrica
+      MYSQL_ROOT_PASSWORD: root            # Senha do root
+      MYSQL_DATABASE: bdfabrica            # Nome do banco de dados
+      MYSQL_USER: springboot_user          # Novo usuário para a aplicação
+      MYSQL_PASSWORD: springboot_password  # Senha do novo usuário
     ports:
-      - "3306:3306"
+      - "3307:3306"  # Porta para acessar o MySQL
     volumes:
       - mysql-data:/var/lib/mysql
+    restart: always  # Reinicia o contêiner automaticamente se falhar
     networks:
-      - spring-mysql
+      - app-network
 
 volumes:
   mysql-data:
 
 networks:
-  spring-mysql:
+  app-network:
+    driver: bridge
