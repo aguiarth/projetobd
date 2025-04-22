@@ -1,4 +1,4 @@
-package com.fabricaagricola.bdfabrica.model;
+	package com.fabricaagricola.bdfabrica.model;
 
 import com.fabricaagricola.bdfabrica.enums.StatusConta;
 import jakarta.persistence.*;
