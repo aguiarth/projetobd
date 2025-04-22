@@ -1,24 +1,25 @@
 CREATE DATABASE bd_fabrica_descartaveis;
+USE bd_fabrica_descartaveis;
 
 CREATE TABLE Financeiro (
     id_financeiro INT AUTO_INCREMENT PRIMARY KEY,
-    historico_lucro FLOAT,
-    historico_prejuizo FLOAT,
-    data_atualizacao DATE
+    historico_lucro FLOAT CHECK (historico_lucro >= 0),
+    historico_prejuizo FLOAT CHECK (historico_prejuizo >= 0),
+    data_atualizacao DATE DEFAULT (CURRENT_DATE)
 );
 
 CREATE TABLE Conta (
     id_conta INT AUTO_INCREMENT PRIMARY KEY,
     id_financeiro INT,
-    data_emissao DATE,
+    data_emissao DATE DEFAULT (CURRENT_DATE),
     data_vencimento DATE,
-    valor_total FLOAT,
-    status VARCHAR(45),
+    valor_total FLOAT CHECK (valor_total >= 0),
+    status VARCHAR(45) CHECK (status IN ('PENDENTE', 'PAGO', 'VENCIDO')),
     FOREIGN KEY (id_financeiro) REFERENCES Financeiro(id_financeiro)
 );
 
 CREATE TABLE ContaReceber (
-    id_conta INT AUTO_INCREMENT PRIMARY KEY,
+    id_conta INT PRIMARY KEY,
     FOREIGN KEY (id_conta) REFERENCES Conta(id_conta)
 );
 
@@ -26,17 +27,17 @@ CREATE TABLE Cliente (
     cnpj VARCHAR(45) PRIMARY KEY,
     razao_social VARCHAR(45),
     rua VARCHAR(45),
-    numero VARCHAR(45),
+    numero VARCHAR(10),
     cidade VARCHAR(45),
-    cep VARCHAR(45),
-    email VARCHAR(45)
+    cep VARCHAR(9),
+    email VARCHAR(45) UNIQUE
 );
 
-create TABLE  Telefone_cliente (
-	cnpj VARCHAR(45),
-	telefone_cliente VARCHAR(45),
-	FOREIGN KEY (cnpj) REFERENCES Cliente(cnpj),
-	primary key (cnpj, telefone_cliente)
+CREATE TABLE Telefone_cliente (
+    cnpj VARCHAR(45),
+    telefone_cliente VARCHAR(20),
+    FOREIGN KEY (cnpj) REFERENCES Cliente(cnpj),
+    PRIMARY KEY (cnpj, telefone_cliente)
 );
 
 CREATE TABLE Possui (
@@ -49,16 +50,16 @@ CREATE TABLE Possui (
 
 CREATE TABLE NotaFiscal (
     chave VARCHAR(45) PRIMARY KEY,
-    valor_imposto FLOAT,
-    data_emissao_nota DATE
+    valor_imposto FLOAT CHECK (valor_imposto >= 0),
+    data_emissao_nota DATE DEFAULT (CURRENT_DATE)
 );
 
 CREATE TABLE Pedido (
     numero VARCHAR(45) PRIMARY KEY,
     chave VARCHAR(45),
-    data_emissao DATE,
-    valor_total FLOAT,
-    status VARCHAR(45),
+    data_emissao DATE DEFAULT (CURRENT_DATE),
+    valor_total FLOAT CHECK (valor_total >= 0),
+    status VARCHAR(45) CHECK (status IN ('ABERTO', 'FINALIZADO', 'CANCELADO')),
     forma_pagamento VARCHAR(45),
     FOREIGN KEY (chave) REFERENCES NotaFiscal(chave)
 );
@@ -73,9 +74,9 @@ CREATE TABLE Realiza (
 
 CREATE TABLE Expedicao (
     id_expedicao INT AUTO_INCREMENT PRIMARY KEY,
-    data_expedicao DATE,
+    data_expedicao DATE DEFAULT (CURRENT_DATE),
     hora_expedicao TIME,
-    status VARCHAR(45)
+    status VARCHAR(45) CHECK (status IN ('PENDENTE', 'ENVIADO', 'ENTREGUE'))
 );
 
 CREATE TABLE Envia (
@@ -98,7 +99,7 @@ CREATE TABLE EntregaTransporte (
 CREATE TABLE ProdutoAcabado (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(45),
-    data_finalizacao DATE
+    data_finalizacao DATE DEFAULT (CURRENT_DATE)
 );
 
 CREATE TABLE Contem (
@@ -114,7 +115,7 @@ CREATE TABLE OrdemProducao (
     id_dependente INT,
     id_requisitado INT,
     produto_fabricado VARCHAR(45),
-    quantidade_produto INT,
+    quantidade_produto INT CHECK (quantidade_produto > 0),
     data_inicio DATE,
     data_final DATE,
     descricao VARCHAR(45),
@@ -134,8 +135,8 @@ CREATE TABLE MateriaPrima (
     id_materia_prima INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(45),
     data_validade DATE,
-    custo_unitario FLOAT,
-    custo_total FLOAT
+    custo_unitario FLOAT CHECK (custo_unitario >= 0),
+    custo_total FLOAT CHECK (custo_total >= 0)
 );
 
 CREATE TABLE Consome (
@@ -148,8 +149,8 @@ CREATE TABLE Consome (
 
 CREATE TABLE Estoque (
     id_estoque INT AUTO_INCREMENT PRIMARY KEY,
-    tipo_movimentacao VARCHAR(45),
-    data_movimentacao DATE,
+    tipo_movimentacao VARCHAR(45) CHECK (tipo_movimentacao IN ('ENTRADA', 'SAÍDA')),
+    data_movimentacao DATE DEFAULT (CURRENT_DATE),
     hora_movimentacao TIME
 );
 
@@ -160,7 +161,7 @@ CREATE TABLE Lote (
     id_produto INT,
     custo VARCHAR(45),
     descricao VARCHAR(45),
-    quantidade INT,
+    quantidade INT CHECK (quantidade >= 0),
     data_validade DATE,
     FOREIGN KEY (id_estoque) REFERENCES Estoque(id_estoque),
     FOREIGN KEY (id_materia_prima) REFERENCES MateriaPrima(id_materia_prima),
@@ -171,7 +172,7 @@ CREATE TABLE Fornecedor (
     cnpj VARCHAR(45) PRIMARY KEY,
     razao_social VARCHAR(45),
     endereco VARCHAR(45),
-    telefone VARCHAR(45),
+    telefone VARCHAR(20),
     condicoes_pagamento VARCHAR(45)
 );
 
