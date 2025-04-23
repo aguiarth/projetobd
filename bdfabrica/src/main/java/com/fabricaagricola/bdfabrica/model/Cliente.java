@@ -1,5 +1,6 @@
 package com.fabricaagricola.bdfabrica.model;
 
+import java.util.List;
 
 public class Cliente {
     private String cnpj;
@@ -9,10 +10,10 @@ public class Cliente {
     private String cidade;
     private String cep;
     private String email;
-    // private List<String> telefones; 
+    private List<TelefoneCliente> telefones;
     // so colocar telefone no construtor caso a gnt queira q seja criado junto com cliente
 
-    public Cliente(String cnpj, String razaoSocial, String rua, String numero, String cidade, String cep, String email) {
+    public Cliente(String cnpj, String razaoSocial, String rua, String numero, String cidade, String cep, String email, List<TelefoneCliente> telefones) {
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.rua = rua;
@@ -20,6 +21,7 @@ public class Cliente {
         this.cidade = cidade;
         this.cep = cep;
         this.email = email;
+        this.telefones = telefones != null ? telefones : List.of();
     }
 
     public String getCnpjCliente() {
@@ -78,11 +80,11 @@ public class Cliente {
         this.email = email;
     }
 
-//    public List<String> getTelefones() {
-//        return telefones;
-//    }
-//
-//    public void setTelefones(List<String> telefones) {
-//        this.telefones = telefones;
-//    }
+    public List<TelefoneCliente> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<TelefoneCliente> telefones) {
+    	this.telefones = telefones != null ? telefones : List.of();
+    }
 }
