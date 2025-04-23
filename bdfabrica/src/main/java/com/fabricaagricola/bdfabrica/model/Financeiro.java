@@ -9,22 +9,17 @@ public class Financeiro {
     private float historicoPrejuizo;
     private LocalDate dataAtualizacao;
 
-    // Construtor padrão
     public Financeiro() {
-        // Definir dataAtualizacao como a data atual no construtor padrão
+
         this.dataAtualizacao = LocalDate.now();
     }
 
-    // Construtor completo
     public Financeiro(int idFinanceiro, float historicoLucro, float historicoPrejuizo, LocalDate dataAtualizacao) {
         this.idFinanceiro = idFinanceiro;
         this.historicoLucro = historicoLucro;
         this.historicoPrejuizo = historicoPrejuizo;
-        // Se a data for nula, atribui a data atual
         this.dataAtualizacao = (dataAtualizacao == null) ? LocalDate.now() : dataAtualizacao;
     }
-
-    // Getters e Setters
     public int getIdFinanceiro() {
         return idFinanceiro;
     }
@@ -54,7 +49,6 @@ public class Financeiro {
     }
 
     public void setDataAtualizacao(LocalDate dataAtualizacao) {
-        // Garantir que dataAtualizacao nunca seja null
         this.dataAtualizacao = (dataAtualizacao == null) ? LocalDate.now() : dataAtualizacao;
     }
 }
