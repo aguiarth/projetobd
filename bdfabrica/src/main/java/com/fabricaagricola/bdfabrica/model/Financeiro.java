@@ -10,7 +10,6 @@ public class Financeiro {
     private LocalDate dataAtualizacao;
 
     public Financeiro() {
-
         this.dataAtualizacao = LocalDate.now();
     }
 
