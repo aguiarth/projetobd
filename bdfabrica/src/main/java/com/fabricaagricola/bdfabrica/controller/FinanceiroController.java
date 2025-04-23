@@ -1,58 +1,58 @@
 package com.fabricaagricola.bdfabrica.controller;
 
 import com.fabricaagricola.bdfabrica.model.Financeiro;
-import com.fabricaagricola.bdfabrica.repository.FinanceiroRepository;
+import com.fabricaagricola.bdfabrica.service.FinanceiroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/financeiros")
 public class FinanceiroController {
 
+    private final FinanceiroService financeiroService;
+
     @Autowired
-    private FinanceiroRepository financeiroRepository;
+    public FinanceiroController(FinanceiroService financeiroService) {
+        this.financeiroService = financeiroService;
+    }
 
     // Criar
     @PostMapping
-    public Financeiro createFinanceiro(@RequestBody Financeiro financeiro) {
-        return financeiroRepository.save(financeiro);
+    public ResponseEntity<Financeiro> criar(@RequestBody Financeiro financeiro) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(financeiroService.salvar(financeiro));
     }
 
     // Listar todos
     @GetMapping
-    public List<Financeiro> getAllFinanceiros() {
-        return financeiroRepository.findAll();
+    public ResponseEntity<List<Financeiro>> listarTodos() {
+        return ResponseEntity.ok(financeiroService.listarTodos());
     }
 
     // Buscar por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Financeiro> getFinanceiroById(@PathVariable int id) {
-        Optional<Financeiro> financeiro = financeiroRepository.findById(id);
-        return financeiro.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Financeiro> buscarPorId(@PathVariable int id) {
+        return financeiroService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Atualizar
     @PutMapping("/{id}")
-    public ResponseEntity<Financeiro> updateFinanceiro(@PathVariable int id, @RequestBody Financeiro atualizado) {
-        return financeiroRepository.findById(id).map(financeiro -> {
-        	 financeiro.setHistoricoLucro(atualizado.getHistoricoLucro());
-             financeiro.setHistoricoPrejuizo(atualizado.getHistoricoPrejuizo());
-            financeiro.setDataAtualizacao(atualizado.getDataAtualizacao());
-            return ResponseEntity.ok(financeiroRepository.save(financeiro));
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Financeiro> atualizar(@PathVariable int id, @RequestBody Financeiro financeiro) {
+        if (financeiro.getIdFinanceiro() != id) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(financeiroService.atualizar(financeiro));
     }
 
     // Deletar
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFinanceiro(@PathVariable int id) {
-        if (financeiroRepository.existsById(id)) {
-            financeiroRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deletar(@PathVariable int id) {
+        financeiroService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }
