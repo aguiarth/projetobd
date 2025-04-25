@@ -61,7 +61,7 @@ public class ClienteRepository {
         }
     }
 	
-	// Buscar por CNPJ
+	// Buscar por cnpj
 	public Optional<Cliente> findByCnpj(String cnpj) {
 	    String sqlCliente = "SELECT * FROM Cliente WHERE cnpj = ?";
 	    String sqlTelefones = "SELECT * FROM Telefone_cliente WHERE cnpj = ?";
