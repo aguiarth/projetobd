@@ -49,14 +49,15 @@ CREATE TABLE Possui (
 );
 
 CREATE TABLE NotaFiscal (
-    chave VARCHAR(45) PRIMARY KEY,
+    chave INT AUTO_INCREMENT PRIMARY KEY,
     valor_imposto FLOAT CHECK (valor_imposto >= 0),
     data_emissao_nota DATE DEFAULT (CURRENT_DATE)
 );
 
+
 CREATE TABLE Pedido (
     numero VARCHAR(45) PRIMARY KEY,
-    chave VARCHAR(45),
+    chave INT,
     data_emissao DATE DEFAULT (CURRENT_DATE),
     valor_total FLOAT CHECK (valor_total >= 0),
     status VARCHAR(45) CHECK (status IN ('ABERTO', 'FINALIZADO', 'CANCELADO')),
