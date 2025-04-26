@@ -42,7 +42,7 @@ public class ContaRepository {
 			}
 			
 			return conta;
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 			throw new RuntimeException("Erro ao salvar conta", e);
 		}
 	}
