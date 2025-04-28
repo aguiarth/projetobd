@@ -1,4 +1,4 @@
-package com.fabricaagricola.bdfabrica.repository;
+	package com.fabricaagricola.bdfabrica.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -78,6 +78,28 @@ public class ExpedicaoRepository {
 		}
 	}
 	
+	// Verificar se existe
+    public boolean existsById(int idExpedicao) {
+        String sql = "SELECT COUNT(*) FROM Expedicao WHERE id_expedicao = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idExpedicao);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar existência da Expedição", e);
+        }
+    }
+	
 	// listar all
 	public List<Expedicao> findAll(){
 		String sql = "SELECT * FROM Expedicao";
@@ -86,6 +108,7 @@ public class ExpedicaoRepository {
 		try (Connection conn = dataSource.getConnection();
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql)){
+			
 			while (rs.next()) {
 				Expedicao expedicao = new Expedicao(
 						rs.getInt("id_expedicao"),
@@ -96,6 +119,7 @@ public class ExpedicaoRepository {
 				expedicaoList.add(expedicao);
 			}
 			return expedicaoList;
+			
 		}catch (SQLException e) {
             throw new RuntimeException("Erro ao listar todos as expedicoes", e);
         }
