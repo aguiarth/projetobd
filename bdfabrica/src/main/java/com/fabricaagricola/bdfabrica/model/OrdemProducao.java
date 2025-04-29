@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class OrdemProducao {
 	private int idOrdem;
-	private Integer idDependente; 	// pode ser nulo pq pode não depender de nenhuma outra ordem
-	private Integer idRequisitado; 	// pode ser nulo pq pode não requisitar de nenhuma outra ordem
+	private Integer idOrdemDependente;
+	private Integer idOrdemRequisitada;
 	private String produtoFabricado;
 	private int quantidadeProduto;
 	private LocalDate dataInicio;
@@ -16,11 +16,11 @@ public class OrdemProducao {
 		this.dataInicio = LocalDate.now();
 	}
 
-	public OrdemProducao(int idOrdem, Integer idDependente, Integer idRequisitado, String produtoFabricado,
+	public OrdemProducao(int idOrdem, Integer idOrdemDependente, Integer idOrdemRequisitada, String produtoFabricado,
 			int quantidadeProduto, LocalDate dataInicio, LocalDate dataFinal, String descricao) {
 		this.idOrdem = idOrdem;
-		this.idDependente = idDependente;
-		this.idRequisitado = idRequisitado;
+		this.idOrdemDependente = idOrdemDependente;
+		this.idOrdemRequisitada = idOrdemRequisitada;
 		this.produtoFabricado = produtoFabricado;
 		this.quantidadeProduto = quantidadeProduto;
 		this.dataInicio = (dataInicio == null) ? LocalDate.now() : dataInicio;
@@ -36,20 +36,20 @@ public class OrdemProducao {
 		this.idOrdem = idOrdem;
 	}
 
-	public Integer getIdDependente() {
-		return idDependente;
+	public Integer getIdOrdemDependente() {
+		return idOrdemDependente;
 	}
 
-	public void setIdDependente(Integer idDependente) {
-		this.idDependente = idDependente;
+	public void setIdOrdemDependente(Integer idOrdemDependente) {
+		this.idOrdemDependente = idOrdemDependente;
 	}
 
-	public Integer getIdRequisitado() {
-		return idRequisitado;
+	public Integer getIdOrdemRequisitada() {
+		return idOrdemRequisitada;
 	}
 
-	public void setIdRequisitado(Integer idRequisitado) {
-		this.idRequisitado = idRequisitado;
+	public void setIdOrdemRequisitada(Integer idOrdemRequisitada) {
+		this.idOrdemRequisitada = idOrdemRequisitada;
 	}
 
 	public String getProdutoFabricado() {

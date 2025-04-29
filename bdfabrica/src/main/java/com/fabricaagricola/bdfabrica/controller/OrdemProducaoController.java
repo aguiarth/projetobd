@@ -7,49 +7,75 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ordens-producao")
 public class OrdemProducaoController {
 
-    private final OrdemProducaoService ordemProducaoService;
+	private final OrdemProducaoService service;
 
-    @Autowired
-    public OrdemProducaoController(OrdemProducaoService ordemProducaoService) {
-        this.ordemProducaoService = ordemProducaoService;
-    }
+	@Autowired
+	public OrdemProducaoController(OrdemProducaoService service) {
+		this.service = service;
+	}
 
-    @PostMapping
-    public ResponseEntity<OrdemProducao> criar(@RequestBody OrdemProducao ordemProducao) {
-        OrdemProducao criada = ordemProducaoService.salvarComRelacionamento(ordemProducao);
-        return ResponseEntity.ok(criada);
-    }
+	@PostMapping
+	public OrdemProducao salvar(@RequestBody OrdemProducao ordem) {
+		return service.salvar(ordem);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrdemProducao> buscarPorId(@PathVariable int id) {
-        return ordemProducaoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+	@GetMapping
+	public List<OrdemProducao> listarTodas() {
+		return service.listarTodas();
+	}
 
-    @GetMapping
-    public ResponseEntity<List<OrdemProducao>> listarTodas() {
-        return ResponseEntity.ok(ordemProducaoService.listarTodas());
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<OrdemProducao> buscarPorId(@PathVariable int id) {
+		Optional<OrdemProducao> ordem = service.buscarPorId(id);
+		return ordem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrdemProducao> atualizar(@PathVariable int id, @RequestBody OrdemProducao ordemProducao) {
-        return ordemProducaoService.buscarPorId(id)
-                .map(op -> {
-                    ordemProducao.setIdOrdem(id);
-                    OrdemProducao atualizada = ordemProducaoService.atualizar(ordemProducao);
-                    return ResponseEntity.ok(atualizada);
-                }).orElse(ResponseEntity.notFound().build());
-    }
+	@GetMapping("/{id}/ordem-dependente")
+	public ResponseEntity<OrdemProducao> buscarOrdemDependente(@PathVariable int id) {
+		Optional<OrdemProducao> ordem = service.buscarPorId(id);
+		if (ordem.isPresent() && ordem.get().getIdOrdemDependente() != null) {
+			Optional<OrdemProducao> ordemDependente = service.obterOrdemDependenteCompleta(ordem.get());
+			return ordemDependente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+		}
+		return ResponseEntity.notFound().build();
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable int id) {
-        ordemProducaoService.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
+	@GetMapping("/{id}/ordem-requisitada")
+	public ResponseEntity<OrdemProducao> buscarOrdemRequisitada(@PathVariable int id) {
+		Optional<OrdemProducao> ordem = service.buscarPorId(id);
+		if (ordem.isPresent() && ordem.get().getIdOrdemRequisitada() != null) {
+			Optional<OrdemProducao> ordemRequisitada = service.obterOrdemRequisitadaCompleta(ordem.get());
+			return ordemRequisitada.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+		}
+		return ResponseEntity.notFound().build();
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<OrdemProducao> atualizar(@PathVariable int id, @RequestBody OrdemProducao ordem) {
+		Optional<OrdemProducao> ordemExistente = service.buscarPorId(id);
+		if (ordemExistente.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		ordem.setIdOrdem(id);
+		OrdemProducao ordemAtualizada = service.atualizar(ordem);
+		return ResponseEntity.ok(ordemAtualizada);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deletar(@PathVariable int id) {
+		Optional<OrdemProducao> ordemExistente = service.buscarPorId(id);
+		if (ordemExistente.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		service.deletar(id);
+		return ResponseEntity.noContent().build();
+	}
 }
