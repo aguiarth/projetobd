@@ -28,26 +28,32 @@ public class MateriaPrimaRepository {
 
 	// Inserir
 	public MateriaPrima save(MateriaPrima materiaPrima) {
-		String sql = "INSERT INTO MateriaPrima (descricao, data_validade, custo_unitario, custo_total) VALUES (?, ?, ?, ?)";
+	    String sql = "INSERT INTO MateriaPrima (descricao, data_validade, quantidade, custo_unitario, custo_total) VALUES (?, ?, ?, ?, ?)";
 
-		try (Connection conn = dataSource.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			stmt.setString(1, materiaPrima.getDescricao());
-			stmt.setDate(2, Date.valueOf(materiaPrima.getDataValidade()));
-			stmt.setFloat(3, materiaPrima.getCustoUnitario());
-			stmt.setFloat(4, materiaPrima.getCustoTotal());
+	    // Calcula o custo total antes de salvar
+	    float custoTotal = materiaPrima.getQuantidade() * materiaPrima.getCustoUnitario();
+	    materiaPrima.setCustoTotal(custoTotal);
 
-			stmt.executeUpdate();
+	    try (Connection conn = dataSource.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-			try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-				if (generatedKeys.next()) {
-					materiaPrima.setIdMateriaPrima(generatedKeys.getInt(1));
-				}
-			}
-			return materiaPrima;
-		} catch (SQLException e) {
-			throw new RuntimeException("Erro ao salvar materia prima", e);
-		}
+	        stmt.setString(1, materiaPrima.getDescricao());
+	        stmt.setDate(2, Date.valueOf(materiaPrima.getDataValidade()));
+	        stmt.setInt(3, materiaPrima.getQuantidade());
+	        stmt.setFloat(4, materiaPrima.getCustoUnitario());
+	        stmt.setFloat(5, custoTotal);
+
+	        stmt.executeUpdate();
+
+	        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	                materiaPrima.setIdMateriaPrima(generatedKeys.getInt(1));
+	            }
+	        }
+	        return materiaPrima;
+	    } catch (SQLException e) {
+	        throw new RuntimeException("Erro ao salvar materia prima", e);
+	    }
 	}
 
 	// Buscar por ID
@@ -63,6 +69,7 @@ public class MateriaPrimaRepository {
 							rs.getInt("id_materia_prima"),
 							rs.getString("descricao"), 
 							rs.getDate("data_validade").toLocalDate(),
+							rs.getInt("quantidade"),
 							rs.getFloat("custo_unitario"), 
 							rs.getFloat("custo_total")
 					);
@@ -88,7 +95,8 @@ public class MateriaPrimaRepository {
 				MateriaPrima materiaPrima = new MateriaPrima(
 						rs.getInt("id_materia_prima"), 
 						rs.getString("descricao"),
-						rs.getDate("data_validade").toLocalDate(), 
+						rs.getDate("data_validade").toLocalDate(),
+						rs.getInt("quantidade"),
 						rs.getFloat("custo_unitario"),
 						rs.getFloat("custo_total")
 				);
@@ -103,13 +111,17 @@ public class MateriaPrimaRepository {
 
 	// Atualizar
 	public MateriaPrima update(MateriaPrima materiaPrima) {
-		String sql = "UPDATE MateriaPrima SET descricao = ?, custo_unitario = ?, custo_total = ? WHERE id_materia_prima = ?";
-
+		String sql = "UPDATE MateriaPrima SET descricao = ?, quantidade = ?, custo_unitario = ?, custo_total = ? WHERE id_materia_prima = ?";
+		
+		float custoTotal = materiaPrima.getQuantidade() * materiaPrima.getCustoUnitario();
+	    materiaPrima.setCustoTotal(custoTotal);
+	    
 		try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setString(1, materiaPrima.getDescricao());
-			stmt.setFloat(2, materiaPrima.getCustoUnitario());
-			stmt.setFloat(3, materiaPrima.getCustoTotal());
-			stmt.setInt(4, materiaPrima.getIdMateriaPrima());
+			stmt.setInt(2, materiaPrima.getQuantidade());
+			stmt.setFloat(3, materiaPrima.getCustoUnitario());
+			stmt.setFloat(4, custoTotal);
+			stmt.setInt(5, materiaPrima.getIdMateriaPrima());
 
 			int rowsUpdated = stmt.executeUpdate();
 			if (rowsUpdated == 0) {

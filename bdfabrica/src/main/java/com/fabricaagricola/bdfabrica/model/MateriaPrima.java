@@ -6,15 +6,17 @@ public class MateriaPrima {
     private int idMateriaPrima;
     private String descricao;
     private LocalDate dataValidade;
+    private int quantidade;
     private float custoUnitario;
     private float custoTotal;
 
     public MateriaPrima() {}
 
-    public MateriaPrima(int idMateriaPrima, String descricao, LocalDate dataValidade, float custoUnitario, float custoTotal) {
+    public MateriaPrima(int idMateriaPrima, String descricao, LocalDate dataValidade, int quantidade, float custoUnitario, float custoTotal) {
         this.idMateriaPrima = idMateriaPrima;
         this.descricao = descricao;
         this.dataValidade = dataValidade;
+        this.quantidade =  quantidade;
         this.custoUnitario = custoUnitario;
         this.custoTotal = custoTotal;
     }
@@ -43,6 +45,14 @@ public class MateriaPrima {
         this.dataValidade = dataValidade;
     }
 
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+    
     public float getCustoUnitario() {
         return custoUnitario;
     }
