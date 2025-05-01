@@ -1,6 +1,8 @@
 package com.fabricaagricola.bdfabrica.repository;
 
 import com.fabricaagricola.bdfabrica.model.Gera;
+import com.fabricaagricola.bdfabrica.model.ProdutoAcabado;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -60,12 +62,14 @@ public class GeraRepository {
     
     // Buscar realcionamentos com mesmo idOrdem
     public List<Gera> findByOrdem(int idOrdem) {
-        List<Gera> lista = new ArrayList<>();
-        String sql = "SELECT id_ordem, id_produto FROM Gera WHERE id_ordem = ?";
+    	List<Gera> lista = new ArrayList<>();
+        String sql = "SELECT g.id_ordem, g.id_produto, p.descricao AS produto_descricao, p.data_finalizacao " +
+                     "FROM Gera g " +
+                     "JOIN ProdutoAcabado p ON g.id_produto = p.id_produto " +
+                     "WHERE g.id_ordem = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, idOrdem);
             ResultSet rs = stmt.executeQuery();
 
@@ -74,11 +78,18 @@ public class GeraRepository {
                     rs.getInt("id_ordem"),
                     rs.getInt("id_produto")
                 );
+                // Aqui, podemos mapear a descrição e data de finalização do produto (se desejar)
+                ProdutoAcabado produto = new ProdutoAcabado();
+                produto.setIdProduto(rs.getInt("id_produto"));
+                produto.setDescricao(rs.getString("produto_descricao"));
+                produto.setDataFinalizacao(rs.getDate("data_finalizacao").toLocalDate());
+
+                gera.setProdutoAcabado(produto);
                 lista.add(gera);
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar relação Gera por id_ordem", e);
+            throw new RuntimeException("Erro ao buscar produtos relacionados à ordem", e);
         }
 
         return lista;

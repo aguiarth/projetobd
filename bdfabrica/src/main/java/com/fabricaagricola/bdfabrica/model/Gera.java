@@ -3,7 +3,10 @@ package com.fabricaagricola.bdfabrica.model;
 public class Gera {
     private int idOrdem;
     private int idProduto;
-
+    
+    // perguntar a laura se tem problema esse aributo estar aq sendo q ele não existe no script nem no lógico
+    private ProdutoAcabado produtoAcabado;
+    
     public Gera() {}
 
     public Gera(int idOrdem, int idProduto) {
@@ -25,5 +28,13 @@ public class Gera {
 
     public void setIdProduto(int idProduto) {
         this.idProduto = idProduto;
+    }
+    
+    public ProdutoAcabado getProdutoAcabado() {
+        return produtoAcabado;
+    }
+
+    public void setProdutoAcabado(ProdutoAcabado produtoAcabado) {
+        this.produtoAcabado = produtoAcabado;
     }
 }
