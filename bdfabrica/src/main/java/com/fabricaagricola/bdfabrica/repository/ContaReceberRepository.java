@@ -78,7 +78,7 @@ public class ContaReceberRepository {
         }
 	}
 	
-	// Deletar pelo o id
+	// Deletar
 	public void delete(int id) {
 		String sql = "DELETE FROM ContaReceber WHERE id_conta = ?";
 		
