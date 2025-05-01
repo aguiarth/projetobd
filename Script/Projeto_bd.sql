@@ -103,6 +103,7 @@ CREATE TABLE ProdutoAcabado (
     data_finalizacao DATE DEFAULT (CURRENT_DATE)
 );
 
+
 CREATE TABLE Contem (
     numero VARCHAR(45),
     id_produto INT,
@@ -136,6 +137,7 @@ CREATE TABLE MateriaPrima (
     id_materia_prima INT AUTO_INCREMENT PRIMARY KEY,
     descricao VARCHAR(45),
     data_validade DATE,
+    quantidade INT,
     custo_unitario FLOAT CHECK (custo_unitario >= 0),
     custo_total FLOAT CHECK (custo_total >= 0)
 );
@@ -157,9 +159,9 @@ CREATE TABLE Estoque (
 
 CREATE TABLE Lote (
     codigo VARCHAR(45) PRIMARY KEY,
-    id_estoque INT,
-    id_materia_prima INT,
-    id_produto INT,
+    id_estoque INT NOT NULL,
+    id_materia_prima INT NOT NULL,
+    id_produto INT NOT NULL,
     custo VARCHAR(45),
     descricao VARCHAR(45),
     quantidade INT CHECK (quantidade >= 0),
