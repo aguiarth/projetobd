@@ -54,7 +54,6 @@ CREATE TABLE NotaFiscal (
     data_emissao_nota DATE DEFAULT (CURRENT_DATE)
 );
 
-
 CREATE TABLE Pedido (
     numero VARCHAR(45) PRIMARY KEY,
     chave INT,
@@ -102,7 +101,6 @@ CREATE TABLE ProdutoAcabado (
     descricao VARCHAR(45),
     data_finalizacao DATE DEFAULT (CURRENT_DATE)
 );
-
 
 CREATE TABLE Contem (
     numero VARCHAR(45),
@@ -181,7 +179,7 @@ CREATE TABLE Fornecedor (
 
 CREATE TABLE Vincula (
     cnpj VARCHAR(45),
-    codigo VARCHAR(45),
+    codigo VARCHAR(45) UNIQUE,
     FOREIGN KEY (cnpj) REFERENCES Fornecedor(cnpj),
     FOREIGN KEY (codigo) REFERENCES Lote(codigo),
     PRIMARY KEY (cnpj, codigo)
