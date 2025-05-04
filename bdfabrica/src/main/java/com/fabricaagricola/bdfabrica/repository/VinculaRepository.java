@@ -69,7 +69,7 @@ public class VinculaRepository {
         }
     }
     
-    // conferir se lote já está vinculado a um forneceodr
+    // conferir se lote já está vinculado a um fornecedor
     private boolean loteJaVinculado(String codigo) {
         String sql = "SELECT 1 FROM Vincula WHERE codigo = ?";
         try (Connection conn = dataSource.getConnection();
@@ -105,7 +105,7 @@ public class VinculaRepository {
         return lista;
     }
     
-    // buscar lostes associados a um cnpj
+    // buscar lotes associados a um cnpj
     public List<Vincula> findByCnpj(String cnpj) {
         List<Vincula> lista = new ArrayList<>();
         String sql = "SELECT cnpj, codigo FROM Vincula WHERE cnpj = ?";
