@@ -58,11 +58,11 @@ public class ConsomeService {
     }
 
     public void deletarRelacionamento(int idOrdem, int idMateriaPrima) {
-        if (idOrdem <= 0 || idMateriaPrima <= 0) { // Verifica se ambos os parâmetros são válidos
+        if (idOrdem <= 0 || idMateriaPrima <= 0) {
             throw new IllegalArgumentException("idOrdem e idMateriaPrima são obrigatórios para exclusão.");
         }
         try {
-            consomeRepository.delete(idOrdem, idMateriaPrima); // Supondo que este método esteja no repositório
+            consomeRepository.delete(idOrdem, idMateriaPrima);
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao deletar relacionamento: " + e.getMessage());
         }
