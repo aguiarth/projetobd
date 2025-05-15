@@ -18,7 +18,7 @@ import com.fabricaagricola.bdfabrica.model.Cliente;
 import com.fabricaagricola.bdfabrica.service.ClienteService;
 
 @RestController
-@RequestMapping("/api/clientes")
+@RequestMapping("/api/cliente")
 public class ClienteController {
 	private ClienteService clienteService;
 	

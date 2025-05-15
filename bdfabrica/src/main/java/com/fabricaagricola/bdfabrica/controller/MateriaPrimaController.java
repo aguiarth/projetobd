@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/materiaprima")
+@RequestMapping("/api/materia-prima")
 public class MateriaPrimaController {
 
     private final MateriaPrimaService service;

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/ordens-producao")
+@RequestMapping("/api/ordem-producao")
 public class OrdemProducaoController {
 
 	private final OrdemProducaoService service;
