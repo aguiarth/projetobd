@@ -113,7 +113,7 @@ public class RealizaRepository {
     }
     
     
-    // buscar pedido associados a um cnpj
+    // buscar pedidos associados a um cnpj
     public List<Realiza> findByCnpj(String cnpj) {
         List<Realiza> lista = new ArrayList<>();
         String sql = "SELECT cnpj, numero FROM Realiza WHERE cnpj = ?";
