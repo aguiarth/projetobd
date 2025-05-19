@@ -51,7 +51,6 @@ CREATE TABLE Possui (
 
 CREATE TABLE Pedido (
     numero VARCHAR(45) PRIMARY KEY,
-    chave INT,
     data_emissao DATE DEFAULT (CURRENT_DATE),
     valor_total FLOAT CHECK (valor_total >= 0),
     status VARCHAR(45) CHECK (status IN ('ABERTO', 'FINALIZADO', 'CANCELADO')),
