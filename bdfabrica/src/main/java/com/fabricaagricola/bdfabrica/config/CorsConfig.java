@@ -15,8 +15,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                     .allowedOrigins("http://localhost:3000") // ajuste a porta se for diferente
                     .allowedMethods("GET", "POST", "PUT", "DELETE")
-                    .allowedHeaders("*")
-                    .allowCredentials(true); // se estiver usando autenticação
+                    .allowedHeaders("*");
             }
         };
     }
