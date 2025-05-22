@@ -56,7 +56,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.atualizar(cliente));
     }
     
-    // Deletar
+    // Deletar 
     @DeleteMapping("/{cnpj}")
     public ResponseEntity<Void> deletar(@PathVariable String cnpj) {
     	clienteService.excluir(cnpj);
