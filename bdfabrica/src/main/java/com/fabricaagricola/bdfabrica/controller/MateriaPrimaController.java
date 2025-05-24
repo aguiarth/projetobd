@@ -21,6 +21,10 @@ public class MateriaPrimaController {
 
     @PostMapping
     public ResponseEntity<MateriaPrima> criar(@RequestBody MateriaPrima materiaPrima) {
+        if (materiaPrima.getDataValidade() == null) {
+            materiaPrima.setDataValidade(java.time.LocalDate.now().plusYears(1)); // ou outra lógica
+        }
+
         MateriaPrima criada = service.criarMateriaPrima(materiaPrima);
         return ResponseEntity.ok(criada);
     }

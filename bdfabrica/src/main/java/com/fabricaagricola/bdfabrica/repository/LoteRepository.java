@@ -46,48 +46,55 @@ public class LoteRepository {
 
 	// Salvar
 	public Lote save(Lote lote) {
-		// Verificações de integridade antes do insert
-		if (!existsById("Estoque", "id_estoque", lote.getIdEstoque()) ||
-			!existsById("MateriaPrima", "id_materia_prima", lote.getIdMateriaPrima()) ||
-			!existsById("ProdutoAcabado", "id_produto", lote.getIdProduto())) {
-			throw new IllegalArgumentException("Erro: ID de Estoque, Produto ou Matéria-Prima não encontrado.");
-		}
+	    if (!existsById("Estoque", "id_estoque", lote.getIdEstoque()) ||
+	        !existsById("MateriaPrima", "id_materia_prima", lote.getIdMateriaPrima()) ||
+	        !existsById("ProdutoAcabado", "id_produto", lote.getIdProduto())) {
+	        throw new IllegalArgumentException("Erro: ID de Estoque, Produto ou Matéria-Prima não encontrado.");
+	    }
 
-		String sql = "INSERT INTO Lote (codigo, id_estoque, id_materia_prima, id_produto, custo, descricao, quantidade, data_validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	    if (!isCustoValido(lote.getCusto())) {
+	        throw new IllegalArgumentException("Erro: custo inválido. Insira apenas números válidos (ex: 10.5 ou 10,50).");
+	    }
 
-		try (Connection conn = dataSource.getConnection(); 
-				PreparedStatement stmt = conn.prepareStatement(sql)) {
+	    String sql = "INSERT INTO Lote (codigo, id_estoque, id_materia_prima, id_produto, custo, descricao, quantidade, data_validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-			String codigoLote = "L" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + "-"
-					+ String.format("%04d", new Random().nextInt(10000));
-			lote.setCodigo(codigoLote);
+	    try (Connection conn = dataSource.getConnection(); 
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-			stmt.setString(1, lote.getCodigo());
-			stmt.setInt(2, lote.getIdEstoque());
-			stmt.setInt(3, lote.getIdMateriaPrima());
-			stmt.setInt(4, lote.getIdProduto());
-			stmt.setString(5, lote.getCusto());
-			stmt.setString(6, lote.getDescricao());
-			stmt.setInt(7, lote.getQuantidade());
-			stmt.setDate(8, Date.valueOf(lote.getDataValidade()));
+	        String codigoLote = "L" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) +
+	                            "-" + String.format("%04d", new Random().nextInt(10000));
+	        lote.setCodigo(codigoLote);
 
-			stmt.executeUpdate();
+	        stmt.setString(1, lote.getCodigo());
+	        stmt.setInt(2, lote.getIdEstoque());
+	        stmt.setInt(3, lote.getIdMateriaPrima());
+	        stmt.setInt(4, lote.getIdProduto());
+	        stmt.setString(5, lote.getCusto());
+	        stmt.setString(6, lote.getDescricao());
+	        stmt.setInt(7, lote.getQuantidade());
+	        stmt.setDate(8, Date.valueOf(lote.getDataValidade()));
 
-			return lote;
+	        stmt.executeUpdate();
 
-		} catch (SQLException e) {
-			throw new RuntimeException("Erro ao salvar o lote", e);
-		}
+	        return lote;
+
+	    } catch (SQLException e) {
+	        throw new RuntimeException("Erro ao salvar o lote", e);
+	    }
 	}
+
 
 	// Atualizar
 	public Lote update(Lote lote) {
-		// Verificações de integridade antes do update
 		if (!existsById("Estoque", "id_estoque", lote.getIdEstoque()) ||
 			!existsById("MateriaPrima", "id_materia_prima", lote.getIdMateriaPrima()) ||
 			!existsById("ProdutoAcabado", "id_produto", lote.getIdProduto())) {
 			throw new IllegalArgumentException("Erro: ID de Estoque, Produto ou Matéria-Prima não encontrado.");
 		}
+		
+		if (!isCustoValido(lote.getCusto())) {
+	        throw new IllegalArgumentException("Erro: custo inválido. Insira apenas números válidos (ex: 10.5 ou 10,50).");
+	    }
 
 		String sql = "UPDATE Lote SET custo = ?, descricao = ?, quantidade = ?, data_validade = ? WHERE codigo = ?";
 
@@ -179,4 +186,18 @@ public class LoteRepository {
 			throw new RuntimeException("Erro ao deletar lote", e);
 		}
 	}
+	
+	
+	// MÉTODO AUXILIAR
+	private boolean isCustoValido(String valor) {
+	    if (valor == null || valor.trim().isEmpty()) return false;
+
+	    try {
+	        float f = Float.parseFloat(valor.replace(',', '.')); // Aceita vírgula como separador decimal, se desejar
+	        return f > 0; // Se quiser garantir que seja positivo
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+
 }
