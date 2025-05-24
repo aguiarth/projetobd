@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fabricaagricola.bdfabrica.model.Expedicao;
 import com.fabricaagricola.bdfabrica.repository.EntregaTransporteRepository;
