@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EntregaTransporteRepositorio {
+public class EntregaTransporteRepository {
     private final DataSource dataSource;
 
     @Autowired
-    public EntregaTransporteRepositorio(DataSource dataSource) {
+    public EntregaTransporteRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -136,6 +136,18 @@ public class EntregaTransporteRepositorio {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao deletar EntregaTransporte", e);
+        }
+    }
+    
+    // NOVO MÉTODO: Deletar entregas por ID da Expedição
+    public void deleteByExpedicaoId(int idExpedicao) {
+        String sql = "DELETE FROM EntregaTransporte WHERE id_expedicao = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idExpedicao);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar entregas associadas à expedição " + idExpedicao, e);
         }
     }
 }

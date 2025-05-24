@@ -5,17 +5,21 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fabricaagricola.bdfabrica.model.Expedicao;
+import com.fabricaagricola.bdfabrica.repository.EntregaTransporteRepository;
 import com.fabricaagricola.bdfabrica.repository.ExpedicaoRepository;
 
 @Service
 public class ExpedicaoService {
 	private ExpedicaoRepository expedicaoRepository;
+	private final EntregaTransporteRepository entregaTransporteRepository;
 	
 	@Autowired
-	public ExpedicaoService(ExpedicaoRepository expedicaoRepository) {
+	public ExpedicaoService(ExpedicaoRepository expedicaoRepository, EntregaTransporteRepository entregaTransporteRepository) {
 		this.expedicaoRepository = expedicaoRepository;
+		this.entregaTransporteRepository = entregaTransporteRepository;
 	}
 	
 	public Expedicao salvar(Expedicao expedicao) {
@@ -35,6 +39,7 @@ public class ExpedicaoService {
 	}
 	
 	public void excluir(int id) {
+		entregaTransporteRepository.deleteByExpedicaoId(id);
 		expedicaoRepository.delete(id);
 	}
 }

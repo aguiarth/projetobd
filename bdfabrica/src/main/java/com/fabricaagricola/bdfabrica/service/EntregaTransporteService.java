@@ -7,18 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fabricaagricola.bdfabrica.model.EntregaTransporte;
-import com.fabricaagricola.bdfabrica.repository.EntregaTransporteRepositorio;
+import com.fabricaagricola.bdfabrica.repository.EntregaTransporteRepository;
 import com.fabricaagricola.bdfabrica.repository.ExpedicaoRepository;
 
 @Service
 public class EntregaTransporteService {
 
-    private EntregaTransporteRepositorio entregaRepo;
+    private EntregaTransporteRepository entregaRepo;
     @Autowired
     private ExpedicaoRepository expedicaoRepo;
 
     @Autowired
-    public EntregaTransporteService(EntregaTransporteRepositorio entregaRepo) {
+    public EntregaTransporteService(EntregaTransporteRepository entregaRepo) {
         this.entregaRepo = entregaRepo;
     }
     
