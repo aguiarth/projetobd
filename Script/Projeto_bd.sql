@@ -1,6 +1,7 @@
 CREATE DATABASE bd_fabrica_descartaveis;
 USE bd_fabrica_descartaveis;
 
+-- drop database bd_fabrica_descartaveis;
 
 CREATE TABLE Financeiro (
     id_financeiro INT AUTO_INCREMENT PRIMARY KEY,
@@ -145,8 +146,9 @@ CREATE TABLE Estoque (
     id_estoque INT AUTO_INCREMENT PRIMARY KEY,
     tipo_movimentacao VARCHAR(45) CHECK (tipo_movimentacao IN ('ENTRADA', 'SAÍDA')),
     data_movimentacao DATE DEFAULT (CURRENT_DATE),
-    hora_movimentacao TIME
+    hora_movimentacao TIME DEFAULT (CURRENT_DATE)
 );
+
 
 CREATE TABLE Lote (
     codigo VARCHAR(45) PRIMARY KEY,
@@ -185,3 +187,10 @@ CREATE TABLE ContaPagar (
     FOREIGN KEY (cnpj) REFERENCES Fornecedor(cnpj),
     PRIMARY KEY (id_conta, cnpj)
 );
+
+CALL dashboard_GetResumoGeralPedidos();
+CALL dashboard_GetTotalClientes();
+CALL dashboard_GetTotalLotesRegistrados();
+CALL dashboard_GetValorTotalCustoLotes();
+CALL dashboard_GetResumoContas();
+CALL dashboard_GetLucroMensalHistorico(12); -- substitua 12 pelo número de meses desejado
