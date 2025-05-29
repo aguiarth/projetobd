@@ -193,4 +193,4 @@ CALL dashboard_GetTotalClientes();
 CALL dashboard_GetTotalLotesRegistrados();
 CALL dashboard_GetValorTotalCustoLotes();
 CALL dashboard_GetResumoContas();
-CALL dashboard_GetLucroMensalHistorico(12); -- substitua 12 pelo número de meses desejado
+CALL dashboard_GetLucroMensalHistorico(12);
